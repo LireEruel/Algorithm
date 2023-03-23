@@ -11,7 +11,6 @@ function solution(my_str, n) {
     answer.push(my_str.substring(index, endIndex));
     index += n;
   }
-
   return answer;
 }
 
