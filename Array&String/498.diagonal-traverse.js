@@ -12,38 +12,41 @@
 var findDiagonalOrder = function (mat) {
   let upMode = true;
   let result = [];
+  const M = mat.length;
+  const N = mat[0].length;
+  const total = M * N;
+
+  let count = 0;
   let m = 0;
   let n = 0;
 
-  while (mat[m] !== undefined && mat[m][n] !== undefined) {
+  while (count < total) {
     result.push(mat[m][n]);
 
     if (upMode) {
-      m--;
-      n++;
-      if (!mat[m] || !mat[m][n]) {
-        upMode = false;
-
-        if (mat[0].length - 1 < n) {
-          n--;
-          m += 2;
-        } else {
-          m++;
-        }
+      if (m == 0 && n < N - 1) {
+        upMode = !upMode;
+        n++;
+      } else if (n == N - 1) {
+        upMode = !upMode;
+        m++;
+      } else {
+        m--;
+        n++;
       }
     } else {
-      m++;
-      n--;
-      if (!mat[m] || !mat[m][n]) {
-        upMode = true;
-        if (m > mat.length - 1) {
-          m--;
-          n += 2;
-        } else {
-          n++;
-        }
+      if (m == M - 1 && n < N - 1) {
+        upMode = !upMode;
+        n++;
+      } else if (n == 0) {
+        upMode = !upMode;
+        m++;
+      } else {
+        m++;
+        n--;
       }
     }
+    count++;
   }
   return result;
 };
