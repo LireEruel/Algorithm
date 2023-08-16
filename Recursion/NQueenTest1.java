@@ -10,9 +10,9 @@ public class NQueenTest1 {
         sc.nextInt();
         col = new int[N+1];
         ans = 0;
-        
+
         setQueen(1);
-        System.out.println(a);
+        System.out.println(ans);
     }
     private static void setQueen(int row){
 
