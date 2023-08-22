@@ -16,14 +16,17 @@ public class BOJ_13023_ABCDE {
         }
         for (int friend: friends ) {
             if(selected[friend] == 0) {
+                selected[friend] = 1;
                 boolean result = dfs(selected, friend, count+1);
+                selected[friend] = 0;
                 if(result)
                     return true;
             }
         }
-
         return false;
     }
+
+
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new FileReader(new File("input.txt")));
         //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -43,5 +46,15 @@ public class BOJ_13023_ABCDE {
             graph.get(a).add(b);
             graph.get(b).add(a);
         }
+        boolean result = false;
+        for (int i = 0; i < N; i++) {
+            int[] selected = new int[N];
+            selected[i] = 1;
+            if( dfs(selected, i,1)){
+                result = true;
+                break;
+            }
+        }
+        System.out.println(result ? 1 :0 );
     }
 }

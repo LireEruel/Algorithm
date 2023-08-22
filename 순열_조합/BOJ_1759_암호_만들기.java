@@ -31,7 +31,12 @@ public class BOJ_1759_암호_만들기 {
         Arrays.sort(sList);
         for (int i = 0; i < C; i++) {
             switch (sList[i]) {
-                case "a", "e", "i", "o", "u" -> vowelSet.add(i);
+                case "a":
+                case "e":
+                case"i":
+                case"o":
+                case"u":
+                vowelSet.add(i);
             }
         }
 
