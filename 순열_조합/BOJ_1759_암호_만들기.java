@@ -23,7 +23,7 @@ public class BOJ_1759_암호_만들기 {
     }
 
     public static void main(String[] args) throws Exception{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader br = new BufferedReader(new FileReader(new File("input.txt")));
         StringTokenizer st = new StringTokenizer(br.readLine());
         L = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
