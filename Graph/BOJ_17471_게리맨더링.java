@@ -23,6 +23,7 @@ public class BOJ_17471_게리맨더링 {
         return parents[a] = find(parents[a]);
     }
 
+    static int allSum = 0;
     static int make() throws Exception {
         BufferedReader br = new BufferedReader(new FileReader(new File("input.txt")));
         //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -37,6 +38,7 @@ public class BOJ_17471_게리맨더링 {
             Place place = new Place(i,count, new HashSet<Integer>());
             places[i]= place;
             parents[i] = i;
+            allSum += count;
         }
         int nerds = 0;
         for (int i = 1; i <N+1 ; i++) {
@@ -114,7 +116,7 @@ public class BOJ_17471_게리맨더링 {
         for (int i = 0; i < N; i++) {
             nums[i] = i+1;
         }
-        for (int r = 1; r < N-1; r++) {
+        for (int r = 1; r < N; r++) {
             int [] set = new int[N];
             // 0보다 큰 값으로 R개를 맨 뒤부터 채운다.
             int cnt = 0;
@@ -136,7 +138,7 @@ public class BOJ_17471_게리맨더링 {
         for (ArrayList<Integer> selectedNodeList : selectedNodeListSet ) {
             int[] selected =  new int [N+1];
             selected[selectedNodeList.get(0)] = 1;
-            boolean valid = dfs(0, selectedNodeList, places[selectedNodeList.get(0)], selected);
+            boolean valid = dfs(1, selectedNodeList, places[selectedNodeList.get(0)], selected);
             if (valid) {
                 ArrayList<Integer> newList = new ArrayList<>();
                 int sum = 0;
@@ -147,9 +149,10 @@ public class BOJ_17471_게리맨더링 {
                     }
                 }
                 selected =  new int [N+1];
-                valid = dfs(0, selectedNodeList, places[newList.get(0)], selected );
+                selected[newList.get(0)] = 1;
+                valid = dfs(1, selectedNodeList, places[newList.get(0)], selected );
                 if(valid) {
-                    int diff = (N*(N+1))/2 - sum * 2 ;
+                    int diff = allSum - sum;
                     if (result == -1 || diff < result) {
                         result = diff;
                     }
