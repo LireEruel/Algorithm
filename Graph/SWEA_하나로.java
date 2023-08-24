@@ -19,7 +19,7 @@ public class SWEA_하나로 {
                 return Double.compare(weight,o.weight);
             }
         }
-        static ArrayList<Edge> edgeList = new ArrayList<>();
+        static Edge[] edgeList;
         static int[] parents ;
         static void make(int N) {
             parents = new int[N];
@@ -60,18 +60,20 @@ public class SWEA_하나로 {
 
                 // 엣지 생성
                 //연서언니가 했길래 ㅎㅎ
+                int cntEdge = N * (N-1)/2;
+                edgeList = new Edge[cntEdge];
+                int idx = 0;
                 for (int i = 0; i < N; i++) {
                     for (int j = i+1; j < N; j++) {
                         long xDiff = Math.abs( islands[i][0] - islands[j][0]);
                         long yDiff = Math.abs( islands[i][1] - islands[j][1]);
                         double w =  (Math.pow(xDiff, 2) + Math.pow(yDiff,2)) * E;
-                        Edge edge1 = new Edge(i,j,w);
-                        Edge edge2 = new Edge(j,i,w);
-                        edgeList.add(edge1);
-                        edgeList.add(edge2);
+                        Edge edge = new Edge(i,j,w);
+                        edgeList[idx++] = edge;
                     }
                 }
-                Collections.sort(edgeList);
+
+                Arrays.sort(edgeList);
 
                 make(N);
                 double sum = 0;
@@ -81,8 +83,7 @@ public class SWEA_하나로 {
                     int b = edge.to;
                     if(union(a,b)){
                         sum += edge.weight;
-                        count++;
-                        if(count == N-1) break;
+                        if(++count== N-1) break;
                     }
                 }
 
