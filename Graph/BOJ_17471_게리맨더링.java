@@ -16,13 +16,6 @@ public class BOJ_17471_게리맨더링 {
     static int[] parents;
     static Place[] places;
     static int N;
-    static int find(int a){
-        if(parents[a] == a) {
-            return a;
-        }
-        return parents[a] = find(parents[a]);
-    }
-
     static int allSum = 0;
     static int make() throws Exception {
         BufferedReader br = new BufferedReader(new FileReader(new File("input.txt")));
@@ -77,19 +70,26 @@ public class BOJ_17471_게리맨더링 {
         return true;
     }
 
-    static boolean dfs(int cnt, ArrayList<Integer> list, Place current, int[] selected)
+    static boolean bfs(ArrayList<Integer> list)
     {
-        if(cnt == list.size()) return true;
-        for (int node: current.nearList ) {
-            if(list.contains(node) && selected[node] == 0) {
-                selected[node] = 1;
-                if (dfs(cnt + 1, list, places[node], selected)) {
-                    return true;
+        Queue<Integer> queue = new ArrayDeque<>();
+        int count = 0;
+        int startIndex = list.get(0);
+        queue.add(startIndex);
+        Set<Integer> selected = new HashSet<>();
+        selected.add(startIndex);
+        while (!queue.isEmpty())
+        {
+            Place current = places[queue.poll()];
+            count++;
+            for (int node: current.nearList ) {
+                if(!selected.contains(node) && list.contains(node)){
+                    queue.add(node);
+                    selected.add(node);
                 }
-                selected[node] = 0;
             }
         }
-        return false;
+        return count == list.size();
     }
 
     static ArrayList<ArrayList<Integer>> selectedNodeListSet = new ArrayList<>();
@@ -99,16 +99,7 @@ public class BOJ_17471_게리맨더링 {
             System.out.println( Math.abs(places[1].peopleCount - places[2].peopleCount));
             return;
         }
-        else if (nerds == 1) {
-            int sum = (N * (1 + N)) / 2;
-            for (int i = 1; i < N+1; i++) {
-                if(places[i].nearList.isEmpty()){
-                    System.out.println(sum - places[i].peopleCount * 2);
-                    return;
-                }
-            }
-        }
-        else if (nerds >= 2) {
+        if (nerds >= 2) {
             System.out.println(-1);
             return;
         }
@@ -136,9 +127,7 @@ public class BOJ_17471_게리맨더링 {
         int result = -1;
 
         for (ArrayList<Integer> selectedNodeList : selectedNodeListSet ) {
-            int[] selected =  new int [N+1];
-            selected[selectedNodeList.get(0)] = 1;
-            boolean valid = dfs(1, selectedNodeList, places[selectedNodeList.get(0)], selected);
+            boolean valid = bfs(selectedNodeList);
             if (valid) {
                 ArrayList<Integer> newList = new ArrayList<>();
                 int sum = 0;
@@ -148,11 +137,9 @@ public class BOJ_17471_게리맨더링 {
                         sum+= places[i].peopleCount;
                     }
                 }
-                selected =  new int [N+1];
-                selected[newList.get(0)] = 1;
-                valid = dfs(1, selectedNodeList, places[newList.get(0)], selected );
+                valid =  bfs(newList);
                 if(valid) {
-                    int diff = allSum - sum;
+                    int diff = Math.abs((allSum - sum)- sum) ;
                     if (result == -1 || diff < result) {
                         result = diff;
                     }
