@@ -25,9 +25,8 @@ public class SWEA_1767_프로세서_연결하기 {
            int res = cnt;
            int nx = x + dx[direction];
            int ny = y + dy[direction];
-           if(nx== 0 || ny == 0 || nx == N-1 || ny == N-1){
-               board[nx][ny] = 1;
-               return cnt+1;
+           if(nx < 0 || ny < 0 || nx == N || ny == N){
+               return cnt;
            }else if(board[nx][ny] == 1) {
                return -1;
            }else {
@@ -60,42 +59,46 @@ public class SWEA_1767_프로세서_연결하기 {
         //현재 코어 연결 방향 4개 테스트하기.
         //지금이 마지막 코어라면 result 업데이트하기.
         // 마지막 아니라면 다음 코어 돌리기.
+       //System.out.println("connectCount : "+ connectCount + " length:  "+  length + " coreIndex : " + coreIndex);
 
         if(coreIndex == coreList.size()){
             if(result[0] < connectCount || (result[0] == connectCount && result[1] > length)){
                 result[0] = connectCount;
                 result[1] = length;
+              //System.out.println("res 업데이트");
             }
             return;
         }
 
 
         Core core = coreList.get(coreIndex);
+
+
         for (int direction = 0; direction < 4; direction++) {
             // 계속 깊은복사로 새거 주는게 편하겠지만....
             // 갔다가 아니면 되돌아오는 코드가 필요하다. 어차피!
 
             int len = draw(core.x, core.y, direction, 0);
-            System.out.println("connectCount : "+ connectCount + " direction : " + direction + " length:  "+ length+"   "+"x : " + core.x + " y : " + core.y);
-            printBoard();
+            //System.out.println("connectCount : "+ connectCount + " length:  "+  length + " coreIndex : " + coreIndex + "   "+"x : " + core.x + " y : " + core.y + " plus pipe len : " + len);
+            //printBoard();
             if(len > 0){
                 viewBoard(connectCount+1, length+len, coreIndex+1);
                 remove(core.x, core.y, direction);
             }else {
                 viewBoard(connectCount, length, coreIndex+1);
             }
+
         }
     }
-
-
     public static void main(String[] args) throws Exception{
         BufferedReader br = new BufferedReader(new FileReader(new File("input.txt")));
         int T = Integer.parseInt(br.readLine());
-
+        StringBuilder sb = new StringBuilder();
         for (int testCase = 1; testCase <T+1 ; testCase++) {
             N =Integer.parseInt(br.readLine());
             board = new int[N][N];
-
+            result = new int[]{0,0};
+            coreList.clear();
             for (int x = 0; x < N; x++) {
                 StringTokenizer st = new StringTokenizer(br.readLine());
                 for (int y = 0; y < N; y++) {
@@ -107,7 +110,8 @@ public class SWEA_1767_프로세서_연결하기 {
                 }
             }
             viewBoard(0,0,0);
-            System.out.println(result[1]);
+            sb.append("#").append(testCase).append(" ").append(result[1]).append("\n");
         }
+        System.out.println(sb);
     }
 }
