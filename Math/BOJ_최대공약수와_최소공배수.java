@@ -1,4 +1,4 @@
-package Simulation;
+package Math;
 
 import java.io.*;
 import java.util.*;
