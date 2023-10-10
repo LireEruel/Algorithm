@@ -82,4 +82,12 @@ try:
                 )
 
 except Exception as e:
-    print(f"오류 발생: {e}")
+    service_key_index + 1
+    with open(content_info_file_path, "w", encoding="utf-8") as content_info_file:
+        content_info_data["service_key_index"] = service_key_index
+        json.dump(
+            content_info_data,
+            content_info_file,
+            indent=4,
+            ensure_ascii=False,
+        )
