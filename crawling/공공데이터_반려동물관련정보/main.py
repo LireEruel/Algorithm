@@ -7,13 +7,13 @@ url = "http://apis.data.go.kr/B551011/KorService1/detailPetTour1"  # 요청을 �
 
 try:
     with open(content_info_file_path, "r", encoding="utf-8") as content_info_file:
-        data = json.load(content_info_file)
+        content_info_data = json.load(content_info_file)
     with open(result_file_path, "r", encoding="utf-8") as result_file:
         result_data = json.load(result_file)
-    content_index = data["content_index"]
-    service_key_index = data["service_key_index"]
-    service_key_list = data["service_key_list"]
-    content_id_list = data["content_id_list"]
+    content_index = content_info_data["content_index"]
+    service_key_index = content_info_data["service_key_index"]
+    service_key_list = content_info_data["service_key_list"]
+    content_id_list = content_info_data["content_id_list"]
 
     print("JSON 파일을 성공적으로 읽었습니다.")
     while True:
@@ -62,6 +62,7 @@ try:
                 with open(result_file_path, "w", encoding="utf-8") as result_file:
                     json.dump(result_data, result_file, indent=4, ensure_ascii=False)
                     print(result_data)
+
             else:
                 print(data)
         except requests.exceptions.RequestException as e:
@@ -69,6 +70,16 @@ try:
 
         finally:
             content_index += 1
+            with open(
+                content_info_file_path, "w", encoding="utf-8"
+            ) as content_info_file:
+                content_info_data["content_index"] = content_index
+                json.dump(
+                    content_info_data,
+                    content_info_file,
+                    indent=4,
+                    ensure_ascii=False,
+                )
 
 except Exception as e:
     print(f"오류 발생: {e}")
