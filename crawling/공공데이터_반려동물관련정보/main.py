@@ -67,17 +67,36 @@ try:
                 print(data)
         except requests.exceptions.RequestException as e:
             print(f"request 오류 발생: {e}")
-            service_key_index += 1
-            with open(
-                content_info_file_path, "w", encoding="utf-8"
-            ) as content_info_file:
-                content_info_data["service_key_index"] = service_key_index
-                json.dump(
-                    content_info_data,
-                    content_info_file,
-                    indent=4,
-                    ensure_ascii=False,
-                )
+            try:
+                response = requests.get(req_url, verify=False)  # GET 요청에 파라미터 추가
+                response.raise_for_status()  # 요청이 성공했는지 확인
+                data = response.json()
+                data = data["response"]["body"]
+
+                # 응답 내용 출력
+
+                if data["numOfRows"] > 0:
+                    result_data["place_list"].append(data["items"]["item"][0])
+                    with open(result_file_path, "w", encoding="utf-8") as result_file:
+                        json.dump(
+                            result_data, result_file, indent=4, ensure_ascii=False
+                        )
+                        print(result_data)
+
+                else:
+                    print(data)
+            except requests.exceptions.RequestException as e:
+                service_key_index += 1
+                with open(
+                    content_info_file_path, "w", encoding="utf-8"
+                ) as content_info_file:
+                    content_info_data["service_key_index"] = service_key_index
+                    json.dump(
+                        content_info_data,
+                        content_info_file,
+                        indent=4,
+                        ensure_ascii=False,
+                    )
 
         finally:
             content_index += 1
