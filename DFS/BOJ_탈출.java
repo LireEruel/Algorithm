@@ -1,6 +1,7 @@
-package BFS;
+package DFS;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,7 +29,6 @@ public class BOJ_탈출 {
             for (int j = 0; j < C; j++) {
                 int value = stringSet.indexOf(tokens[j]);
                 board[i][j] = value;
-                System.out.println(value);
                 if(value == 1){
                     waters.add(new int[]{i, j});
                 } else if (value == 2) {
@@ -37,7 +37,7 @@ public class BOJ_탈출 {
                 }
             }
         }
-        int result = dfs(board, waters, dochi, 0);
+        int result = dfs(board, waters, dochi, 1);
         if(result == -1){
             System.out.println("KAKTUS");
         }else {
@@ -49,8 +49,9 @@ public class BOJ_탈출 {
     static int[] dy = {1,-1,0,0};
     private static int dfs(int[][] board, Set<int[]> waters,
                            int[] dochi, int count) {
+        //printBoard(board);
         int result = -1;
-        board[dochi[0]][dochi[1]] = 0;
+        board[dochi[0]][dochi[1]] = 5;
         for (int i = 0; i < 4; i++) {
             int nx = dx[i] + dochi[0];
             int ny = dy[i] + dochi[1];
@@ -63,13 +64,24 @@ public class BOJ_탈출 {
                     continue;
                 } else if (now == 3) {
                     //target
+                  //  System.out.println("찾았음!!! : " + count );
                     return count;
                 } else if (now == 0) {
-                    printBoard(board);
-                    // 땅
-                    Set<int[]> newWaters = watering(board, waters);
 
-                    int res = dfs(board, newWaters, new int[]{nx, ny}, count+1);
+                    // 땅
+
+                    int[][] newBoard = new int[R][C];
+
+                    for(int d = 0; d < board.length; d++){ // 반복문 + ArrayCopy
+                        System.arraycopy(board[d], 0,newBoard[d], 0, C);
+                    }
+                    newBoard[nx][ny] = 2;
+                    Set<int[]> newWaters = watering(newBoard, waters);
+                    if(newWaters == null){ // 물이 찰 예정인 칸으로 고슴도치가 이동한 경우
+                        continue;
+                    }
+
+                    int res = dfs(newBoard, newWaters, new int[]{nx, ny}, count+1);
                     if(res > 0){
                         if(result <0 || res < result){
                             result = res;
@@ -81,14 +93,12 @@ public class BOJ_탈출 {
         }
         board[dochi[0]][dochi[1]] = 2;
         return result;
-
     }
 
     private static void printBoard (int[][] board){
         System.out.println("===================");
         for (int[] row: board
              ) {
-
             System.out.println(Arrays.toString(row));
         }
     }
@@ -102,10 +112,12 @@ public class BOJ_탈출 {
 
                 if(0 <= nx && nx < R &&0 <= ny && ny < C ){
                     int now = board[nx][ny];
-                    if (now == 0) {
+                    if (now == 0 || now == 5) {
                         // 땅
                         newWaters.add(new int[]{nx, ny});
                         board[nx][ny] = 1;
+                    } else if (now == 2) {
+                        return  null;
                     }
                 }
 
