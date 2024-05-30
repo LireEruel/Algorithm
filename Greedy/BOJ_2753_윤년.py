@@ -15,11 +15,10 @@
 
 
 def solution():
+    result = 0
     testYear = int(input())
-    if testYear % 4 == 0 and (testYear % 100 != 0 or testYear % 400 == 0):
-        print("1")
-    else:
-        print("0")
+    result = int(testYear % 4 == 0 and (testYear % 100 != 0 or testYear % 400 == 0))
+    print(result)
 
 
 solution()
